@@ -3,15 +3,16 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.exchange"
         minSdk 21
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -33,6 +34,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
@@ -49,9 +53,24 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
+    // OkHttp
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+
     // Hilt
     implementation "com.google.dagger:hilt-android:$project.hilt_version"
     kapt "com.google.dagger:hilt-compiler:$project.hilt_version"
+
+    // ViewModel
+    def lifecycle_version = '2.4.1'
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$project.nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$project.nav_version"
 }
 
 def getApiAccessKey() {

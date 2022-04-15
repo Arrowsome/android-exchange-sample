@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Exchange</string>
+    <string name="error_connection_failure">Unable to fetch rate!</string>
+    <string name="exchange_title_myBalance">MY BALANCE</string>
+    <string name="exchange_title_currencyExchange">CURRENCY EXCHANGE</string>
+    <string name="exchange_title_sell">Sell</string>
+    <string name="exchange_hint_defaultInput">0.00</string>
+    <string name="exchange_title_receive">Receive</string>
+    <string name="exchange_button_submit">SUBMIT</string>
+    <string name="appFlow_label_screenTitle">Currency Converter</string>
+    <string name="exchange_label_exchangeFee">EXCHANGE FEE: %1$s\%% (%2$s swaps so far)</string>
+    <string name="exchange_msg_byArrowsome"><![CDATA[Made with <3 by Arrowsome]]></string>
 </resources>

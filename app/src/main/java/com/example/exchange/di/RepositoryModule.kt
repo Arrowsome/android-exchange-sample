@@ -1,8 +1,8 @@
 package com.example.exchange.di
 
-import com.example.exchange.data.ExchangeRepository
-import com.example.exchange.data.ExchangeRepositoryImpl
-import com.example.exchange.data.ExchangeService
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.exchange.data.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +17,12 @@ class RepositoryModule {
     @Singleton
     fun provideExchangeRepository(service: ExchangeService): ExchangeRepository {
         return ExchangeRepositoryImpl(service)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletRepository(dataStore: DataStore<Preferences>): WalletRepository {
+        return WalletRepositoryImpl(dataStore)
     }
 
 }

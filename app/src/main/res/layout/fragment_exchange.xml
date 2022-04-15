@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.exchange.exchange.ExchangeViewModel" />
+
+        <import type="com.example.exchange.data.Currency"  />
+
+        <import type="com.example.exchange.exchange.ExchangeBinding" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <import type="com.example.exchange.utils.DecimalUtil" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/my_balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/exchange_title_myBalance"
+            android:textAppearance="@style/TextAppearance.Exchange.Caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/eur_balance_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@{DecimalUtil.setDecimalPoint(ExchangeBinding.getAmount(viewModel.userBalance, Currency.EUR))}"
+            android:textAppearance="@style/TextAppearance.Exchange.Body1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/usd_balance_body"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_balance_title"
+            tools:text="100.00 EUR" />
+
+        <TextView
+            android:id="@+id/usd_balance_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{DecimalUtil.setDecimalPoint(ExchangeBinding.getAmount(viewModel.userBalance, Currency.USD))}"
+            android:textAppearance="@style/TextAppearance.Exchange.Body1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/gbp_balance_body"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/eur_balance_body"
+            app:layout_constraintTop_toTopOf="@+id/eur_balance_body"
+            tools:text="0.00 USD" />
+
+        <TextView
+            android:id="@+id/gbp_balance_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@{DecimalUtil.setDecimalPoint(ExchangeBinding.getAmount(viewModel.userBalance, Currency.GBP))}"
+            android:textAppearance="@style/TextAppearance.Exchange.Body1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/usd_balance_body"
+            app:layout_constraintTop_toTopOf="@+id/eur_balance_body"
+            tools:text="0.00 GBP" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/exchange_title_currencyExchange"
+            android:textAppearance="@style/TextAppearance.Exchange.Caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eur_balance_body" />
+
+        <!-- Sell Input Layout -->
+
+        <ImageView
+            android:id="@+id/ic_sell"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/exchange_ic_sell"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/sell_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/exchange_title_sell"
+            android:textAppearance="@style/TextAppearance.Exchange.Body1"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_sell"
+            app:layout_constraintStart_toEndOf="@+id/ic_sell"
+            app:layout_constraintTop_toTopOf="@+id/ic_sell" />
+
+        <EditText
+            android:id="@+id/sell_amount_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center|end"
+            android:hint="@string/exchange_hint_defaultInput"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="@={viewModel.sellInput}"
+            onFocusChanged="@{(focused) -> viewModel.onUpdateSellFocus(focused)}"
+            android:textAppearance="@style/TextAppearance.Exchange.Subtitle1"
+            app:layout_constraintBottom_toBottomOf="@+id/sell_title"
+            app:layout_constraintEnd_toStartOf="@+id/origin_currency_spinner"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/sell_title"
+            app:layout_constraintTop_toTopOf="@+id/sell_title" />
+
+        <Spinner
+            android:id="@+id/origin_currency_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:entries="@{viewModel.supportedCurrencies}"
+            android:onItemSelected="@{(parent, view, position, id) -> viewModel.onOriginCurrencySelected(position)}"
+            android:textAppearance="@style/TextAppearance.Exchange.Subtitle1"
+            app:layout_constraintBottom_toBottomOf="@+id/sell_amount_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sell_amount_input" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ic_sell" />
+
+        <!-- Receive Input Layout -->
+
+        <ImageView
+            android:id="@+id/ic_receive"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/exchange_ic_receive"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_sell" />
+
+        <TextView
+            android:id="@+id/receive_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/exchange_title_receive"
+            android:textAppearance="@style/TextAppearance.Exchange.Body1"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_receive"
+            app:layout_constraintStart_toEndOf="@+id/ic_receive"
+            app:layout_constraintTop_toTopOf="@+id/ic_receive" />
+
+        <EditText
+            android:id="@+id/receive_amount_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center|end"
+            android:hint="@string/exchange_hint_defaultInput"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="@={viewModel.receiveInput}"
+            android:textAppearance="@style/TextAppearance.Exchange.Subtitle1"
+            onFocusChanged="@{(focused) -> viewModel.onUpdateReceiveFocus(focused)}"
+            app:layout_constraintBottom_toBottomOf="@+id/receive_title"
+            app:layout_constraintEnd_toStartOf="@+id/target_currency_spinner"
+            app:layout_constraintStart_toEndOf="@+id/receive_title"
+            app:layout_constraintTop_toTopOf="@+id/receive_title" />
+
+        <Spinner
+            android:id="@+id/target_currency_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:entries="@{viewModel.supportedCurrencies}"
+            android:onItemSelected="@{(parent, view, position, id) -> viewModel.onTargetCurrencySelected(position)}"
+            android:textAppearance="@style/TextAppearance.Exchange.Subtitle1"
+            app:layout_constraintBottom_toBottomOf="@+id/receive_amount_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/receive_amount_input" />
+
+        <View
+            android:id="@+id/receive_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ic_receive" />
+
+        <TextView
+            android:id="@+id/exchange_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@{context.getString(viewModel.exchangeFeeResId, viewModel.exchangeFee, viewModel.numberOfExchanges)}"
+            android:textAppearance="@style/TextAppearance.Exchange.Overline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/receive_divider"
+            tools:text="EXCHANGE FEE: 0.5%"/>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:enabled="@{viewModel.isFormValid()}"
+            android:onClick="@{(view) -> viewModel.onSubmit()}"
+            android:text="@string/exchange_button_submit"
+            android:textAppearance="@style/TextAppearance.Exchange.Button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exchange_fee" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/exchange_msg_byArrowsome"
+            android:textAppearance="@style/TextAppearance.Exchange.Overline"
+            android:textStyle="italic"
+            android:textColor="@android:color/holo_green_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/submit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

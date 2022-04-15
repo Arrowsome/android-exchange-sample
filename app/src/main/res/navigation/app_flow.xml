@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_app_flow"
+    app:startDestination="@id/appFlow_frag_exchangeFragment">
+
+    <fragment
+        android:id="@+id/appFlow_frag_exchangeFragment"
+        android:name="com.example.exchange.exchange.ExchangeFragment"
+        android:label="@string/appFlow_label_screenTitle"
+        tools:layout="@layout/fragment_exchange"/>
+
+</navigation>
