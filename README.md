@@ -25,3 +25,4 @@ And other popular third party libs including:
 - Adding tests (unit testing, integration, and probably UI tests)
 
 
+<img src="assets/screenshot_exchange.jpg"/>
