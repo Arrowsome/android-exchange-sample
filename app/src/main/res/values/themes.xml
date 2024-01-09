@@ -16,7 +16,7 @@
         <item name="android:fontFamily">@font/poppins</item>
     </style>
 
-    <style name="Theme.Exchange.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="Theme.Exchange.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.ActionBar" />
 
     <!-- Text Appearance -->
 

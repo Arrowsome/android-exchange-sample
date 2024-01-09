@@ -1,6 +1,6 @@
 @file:JvmName("ExchangeBinding")
 
-package com.example.exchange.exchange
+package com.example.exchange.ui.exchange
 
 import androidx.lifecycle.LiveData
 import com.example.exchange.data.Balance

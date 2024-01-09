@@ -1,6 +1,5 @@
-package com.example.exchange.exchange
+package com.example.exchange.ui.exchange
 
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.example.exchange.R
 import com.example.exchange.data.*
@@ -22,10 +21,10 @@ class ExchangeViewModel @Inject constructor(
 //    private val _accountBalance = MutableLiveData<Map<String, Double>>()
 //    val accountBalance: LiveData<Map<String, Double>> = _accountBalance
 
-    private val _originCurrency = MutableLiveData<Currency>()
+    private val _sellCurrency = MutableLiveData<Currency>()
 //    val originCurrency: LiveData<Currency> = _originCurrency
 
-    private val _targetCurrency = MutableLiveData<Currency>()
+    private val _receiveCurrency = MutableLiveData<Currency>()
 //    val targetCurrency: LiveData<Currency> = _targetCurrency
 
     private val _snackEvent = MutableLiveData<Event<Int>>()
@@ -34,7 +33,7 @@ class ExchangeViewModel @Inject constructor(
     val numberOfExchanges = walletRepository.exchangeCount.asLiveData()
 
     val exchangeFee = numberOfExchanges.map { count ->
-        if (count >= 5) 0.7 else 0.0
+        if (count >= 5) 0.5 else 0.0
     }
 
     private val _done = MutableLiveData<Event<Unit>>()
@@ -64,9 +63,9 @@ class ExchangeViewModel @Inject constructor(
     val sellInputChangeEvent: LiveData<Event<String>> = sellInput.distinctUntilChanged().debounce(viewModelScope).map {
         isFormValid.value = false
         val amount = it.toDoubleOrNull() ?: return@map Event("-1.0")
-        val from = _originCurrency.value ?: return@map Event("-1.0")
+        val from = _sellCurrency.value ?: return@map Event("-1.0")
         if (hasEnoughBalance(amount, from)) {
-            val to = _targetCurrency.value ?: return@map Event("-1.0")
+            val to = _receiveCurrency.value ?: return@map Event("-1.0")
             val convertedAmount = convertCurrency(amount, from, to)
             isFormValid.value = true
             _insufficientBalance.value = Event(false)
@@ -80,8 +79,8 @@ class ExchangeViewModel @Inject constructor(
 
     val receiveInputChangeEvent = receiveInput.distinctUntilChanged().debounce(viewModelScope).map {
         val amount = it.toDoubleOrNull() ?: return@map Event("-1.0")
-        val from = _originCurrency.value ?: return@map Event("-1.0")
-        val to = _targetCurrency.value ?: return@map Event("-1.0")
+        val from = _receiveCurrency.value ?: return@map Event("-1.0")
+        val to = _sellCurrency.value ?: return@map Event("-1.0")
         val convertedAmount = convertCurrency(amount, from, to)
         Event(String.format("%.2f", convertedAmount))
     }
@@ -107,9 +106,9 @@ class ExchangeViewModel @Inject constructor(
 
     fun onSubmit() {
         val sellAmount = sellInput.value?.toDoubleOrNull() ?: return
-        val from = _originCurrency.value ?: return
+        val from = _sellCurrency.value ?: return
         val receiveAmount = receiveInput.value?.toDoubleOrNull() ?: return
-        val to = _targetCurrency.value ?: return
+        val to = _receiveCurrency.value ?: return
         dispatchBalanceUpdate(
             sellAmount,
             from,
@@ -124,21 +123,21 @@ class ExchangeViewModel @Inject constructor(
     }
 
     fun onOriginCurrencySelected(position: Int) {
-        val currentCurrency = _originCurrency.value
+        val currentCurrency = _sellCurrency.value
         val newCurrency = Currency.values()[position]
-        _originCurrency.value = newCurrency
+        _sellCurrency.value = newCurrency
         sellInput.value = ""
-        if (_targetCurrency.value == newCurrency) {
+        if (_receiveCurrency.value == newCurrency) {
             _updateTargetCurrencyEvent.value = Event(Currency.values().indexOf(currentCurrency))
         }
     }
 
     fun onTargetCurrencySelected(position: Int) {
-        val currentCurrency = _targetCurrency.value
+        val currentCurrency = _receiveCurrency.value
         val newCurrency = Currency.values()[position]
-        _targetCurrency.value = newCurrency
+        _receiveCurrency.value = newCurrency
         receiveInput.value = ""
-        if (_originCurrency.value == newCurrency) {
+        if (_sellCurrency.value == newCurrency) {
             _updateOriginCurrencyEvent.value = Event(Currency.values().indexOf(currentCurrency))
         }
     }
@@ -180,19 +179,20 @@ class ExchangeViewModel @Inject constructor(
         return userBalance.value?.any { it.currency == currency && it.amount >= amount + swapFee } ?: false
     }
 
-    private fun dispatchBalanceUpdate(deductedAmount: Double, inCurrency: Currency, addedAmount: Double, toCurrency: Currency) {
+    private fun dispatchBalanceUpdate(sellAmount: Double, fromCurrency: Currency, buyAmount: Double, toCurrency: Currency) {
         val formatter = DecimalFormat("0.00").apply {
             maximumFractionDigits = 2
         }
 
         viewModelScope.launch {
-            val fromBalance = userBalance.value?.find { it.currency == inCurrency } ?: return@launch
-            val deducedBalance = formatter.format(fromBalance.amount - deductedAmount).toDouble()
-            val swapFee = ((exchangeFee.value ?: 0.0) / 100) * deducedBalance
-            walletRepository.updateBalance(inCurrency, deducedBalance + swapFee)
+            val sellingBalance = userBalance.value?.find { it.currency == fromCurrency } ?: return@launch
+            val sellingAmount = sellingBalance.amount - sellAmount
+            val feeAmount = (exchangeFee.value!! / 100.0) * sellAmount
+            val totalAmountToWithdraw = sellingAmount - feeAmount
+            walletRepository.updateBalance(fromCurrency, totalAmountToWithdraw)
 
             val toBalance = userBalance.value?.find { it.currency == toCurrency } ?: return@launch
-            val sumOfNewBalance = formatter.format(toBalance.amount + addedAmount).toDouble()
+            val sumOfNewBalance = toBalance.amount + buyAmount
             walletRepository.updateBalance(toCurrency, sumOfNewBalance)
         }
     }

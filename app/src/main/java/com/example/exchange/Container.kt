@@ -21,4 +21,8 @@ class Container : AppCompatActivity() {
         setupActionBarWithNavController(findNavController(R.id.nav_container))
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(R.id.nav_container).navigateUp() || super.onSupportNavigateUp()
+    }
+
 }

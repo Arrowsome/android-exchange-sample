@@ -7,8 +7,18 @@
 
     <fragment
         android:id="@+id/appFlow_frag_exchangeFragment"
-        android:name="com.example.exchange.exchange.ExchangeFragment"
+        android:name="com.example.exchange.ui.exchange.ExchangeFragment"
         android:label="@string/appFlow_label_screenTitle"
-        tools:layout="@layout/fragment_exchange"/>
+        tools:layout="@layout/fragment_exchange">
+        <action
+            android:id="@+id/action_exchangeFragment_to_aboutUsFragment"
+            app:destination="@id/aboutUsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.example.exchange.ui.about.AboutUsFragment"
+        android:label="@string/appFlow_label_aboutUsScreenTitle"
+        tools:layout="@layout/fragment_about_us"/>
 
 </navigation>

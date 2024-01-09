@@ -8,6 +8,11 @@
     <string name="exchange_title_receive">Receive</string>
     <string name="exchange_button_submit">SUBMIT</string>
     <string name="appFlow_label_screenTitle">Currency Converter</string>
-    <string name="exchange_label_exchangeFee">EXCHANGE FEE: %1$s\%% (%2$s swaps so far)</string>
+    <string name="exchange_label_exchangeFee">Swap fee: %1$s\%% (%2$s swaps so far)</string>
     <string name="exchange_msg_byArrowsome"><![CDATA[Made with <3 by Arrowsome]]></string>
+    <string name="app_version">version: 0.2.0</string>
+    <string name="about_us">About us</string>
+    <string name="appFlow_label_aboutUsScreenTitle">About Us</string>
+    <string name="about_app">How it Works?</string>
+    <string name="exchange_guide">You have the option to exchange the money in your wallet to these currencies:\n• Euro\n• US Dollars\n• Great Britain Pound\n\nThe first 5 swaps are free of charge!</string>
 </resources>

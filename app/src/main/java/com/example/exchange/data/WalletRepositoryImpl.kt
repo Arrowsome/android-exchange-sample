@@ -47,8 +47,8 @@ class WalletRepositoryImpl(private val dataStore: DataStore<Preferences>) : Wall
 
     override suspend fun registerSwap() {
         dataStore.edit { pref ->
-            val currentValue = pref[Constants.KEY_PREF_EXCHANGE_COUNT] ?: 1
-            pref[Constants.KEY_PREF_EXCHANGE_COUNT] = currentValue + 1
+            val currentSwaps = pref[Constants.KEY_PREF_EXCHANGE_COUNT] ?: 0
+            pref[Constants.KEY_PREF_EXCHANGE_COUNT] = currentSwaps + 1
         }
     }
 
